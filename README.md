@@ -54,22 +54,22 @@ Gig-Shield is a **mobile-first, serverless, event-driven parametric insurance pl
 ---
 
 ## Who We're Protecting — Persona Scenarios
-### 🎯 Chosen Persona: Swiggy Delivery Partner, Hyderabad (Priority)
+### 🎯 Chosen Persona: Zepto Quick-Commerce Rider, Delhi (Priority)
 This is the core target profile for Phase 1 delivery and is the model used for tactical implementation, testing, and demo scenarios.
 
-- Platform: Swiggy food delivery
-- City: Hyderabad (Tier-1 metro with frequent monsoon floods and localized waterlogging)
-- Weekly Earnings Baseline: ₹7,000
-- Local risk factors: highway in Secunderabad, low-lying zones around LB Nagar, seasonal heavy cloudbursts
-- Threat vector: GPS-spoofing syndicate using Telegram groups to misreport red-alert weather status
+- Platform: Zepto grocery delivery
+- City: Delhi (Tier-1 metro with severe winter AQI spikes and traffic disruptions)
+- Weekly Earnings Baseline: ₹6,500
+- Local risk factors: NCR pollution hotspots, sudden civic curfews, monsoon flooding in low-lying areas
+- Threat vector: GPS-spoofing syndicate using Telegram groups to misreport red-alert AQI/weather status
 
 #### Representative user story
-> _"I depend on every shift. If the wintry flood warning fires, I need ₹600/day safety cover instantly, not after days of paperwork. But if 500 fake accounts trigger the same rule, the pool dies in hours."_
+> _"I deliver groceries in toxic smog. If AQI hits 400, I can't ride safely, but the app doesn't care. I need ₹500/day cover instantly, not after weeks. But if syndicates fake it, the system collapses."_
 
-**Selected risk event:** Heavy rain > 70mm in 3 hours in Kukatpally, LB Nagar, and Secunderabad.
+**Selected risk event:** AQI (PM2.5) > 400 for 4+ consecutive hours in Delhi-NCR zones.
 **Gig-Shield response workflow:**
-1. EventBridge catches IMD + OpenWeatherMap flood alert in the affected Hyderabad microzones.
-2. Lambda evaluates nearby policy set for active enrolled Swiggy riders and hits the AI Defense Engine.
+1. EventBridge catches CPCB AQI feed alert in affected Delhi microzones.
+2. Lambda evaluates nearby policy set for active enrolled Zepto riders and hits the AI Defense Engine.
 3. Sensor-fusion telemetry (accelerometer/gyroscope + cell tower + Wi-Fi fingerprint) is scored in SageMaker.
 4. If **Green**, instant payout to UPI. If **Yellow**, quick contextual image check and expedited human triage. If **Red**, hold + manual fraud ops.
 
@@ -345,3 +345,4 @@ The architecture is a fully serverless, event-driven pipeline on AWS, designed t
 <p align="center">
   <strong>Gig-Shield — Because their income shouldn't depend on the weather forecast they never checked.</strong>
 </p>
+
