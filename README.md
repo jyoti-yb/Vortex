@@ -54,6 +54,29 @@ Gig-Shield is a **mobile-first, serverless, event-driven parametric insurance pl
 ---
 
 ## Who We're Protecting — Persona Scenarios
+### 🎯 Chosen Persona: Swiggy Delivery Partner, Hyderabad (Priority)
+This is the core target profile for Phase 1 delivery and is the model used for tactical implementation, testing, and demo scenarios.
+
+- Platform: Swiggy food delivery
+- City: Hyderabad (Tier-1 metro with frequent monsoon floods and localized waterlogging)
+- Weekly Earnings Baseline: ₹7,000
+- Local risk factors: highway in Secunderabad, low-lying zones around LB Nagar, seasonal heavy cloudbursts
+- Threat vector: GPS-spoofing syndicate using Telegram groups to misreport red-alert weather status
+
+#### Representative user story
+> _"I depend on every shift. If the wintry flood warning fires, I need ₹600/day safety cover instantly, not after days of paperwork. But if 500 fake accounts trigger the same rule, the pool dies in hours."_
+
+**Selected risk event:** Heavy rain > 70mm in 3 hours in Kukatpally, LB Nagar, and Secunderabad.
+**Gig-Shield response workflow:**
+1. EventBridge catches IMD + OpenWeatherMap flood alert in the affected Hyderabad microzones.
+2. Lambda evaluates nearby policy set for active enrolled Swiggy riders and hits the AI Defense Engine.
+3. Sensor-fusion telemetry (accelerometer/gyroscope + cell tower + Wi-Fi fingerprint) is scored in SageMaker.
+4. If **Green**, instant payout to UPI. If **Yellow**, quick contextual image check and expedited human triage. If **Red**, hold + manual fraud ops.
+
+**Key measure of differentiation:**
+- 95% confidence in real-route motion within location corridor (via sensor fusion)
+- 99% isolation confidence not in identical Wi-Fi / tower fingerprint cluster with other flagged claimants
+- streak-based normalization for poor network or low-signal drops (prevents false positives from legit service outages)
 
 ### Persona 1: Ravi, Swiggy Delivery Partner, Bengaluru
 > _"I work 10-hour shifts, 6 days a week. Last monsoon, the whole city flooded for 3 days. I couldn't move my bike. Lost ₹3,600 that week. My landlord didn't care."_
