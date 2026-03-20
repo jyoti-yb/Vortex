@@ -1,0 +1,1740 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Gig-Shield — Parametric Income Insurance</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    /* Apple Light Mode Palette */
+    --bg: #f5f5f7;
+    --surface: #ffffff;
+    --surface2: #f2f2f7;
+    --border: #d2d2d7;
+    
+    --text: #1d1d1f;
+    --muted: #86868b;
+    --muted-light: #aeaeae;
+    
+    --accent: #0071e3; /* Apple Blue */
+    --accent-dim: rgba(0, 113, 227, 0.1);
+    
+    --green: #34c759;
+    --green-dim: rgba(52, 199, 89, 0.15);
+    --yellow: #ff9500;
+    --yellow-dim: rgba(255, 149, 0, 0.15);
+    --red: #ff3b30;
+    --red-dim: rgba(255, 59, 48, 0.1);
+    --blue: #0071e3;
+    --blue-dim: rgba(0, 113, 227, 0.1);
+    
+    /* Typography */
+    --sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    --mono: 'Space Mono', "SF Mono", Consolas, monospace;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--sans);
+    -webkit-font-smoothing: antialiased;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* HEADER */
+  .header {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 28px;
+    background: rgba(255, 255, 255, 0.8);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-bottom: 1px solid rgba(0,0,0,0.08);
+  }
+
+  .logo {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-family: var(--sans);
+    font-size: 19px;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    color: var(--text);
+  }
+
+  .logo-shield {
+    width: 28px; height: 28px;
+    background: var(--accent);
+    color: white;
+    border-radius: 6px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 14px;
+  }
+
+  .nav-tabs {
+    display: flex;
+    gap: 8px;
+  }
+
+  .nav-tab {
+    padding: 8px 16px;
+    border-radius: 980px; /* Apple pill shape */
+    border: none;
+    background: transparent;
+    color: var(--text);
+    font-family: var(--sans);
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    white-space: nowrap;
+  }
+
+  .nav-tab.active {
+    background: var(--text);
+    color: #fff;
+  }
+
+  .nav-tab:hover:not(.active) {
+    background: var(--surface2);
+  }
+
+  .status-pill {
+    display: flex; align-items: center; gap: 6px;
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--text);
+    background: var(--surface2);
+    padding: 6px 12px;
+    border-radius: 980px;
+  }
+
+  .status-dot {
+    width: 8px; height: 8px;
+    background: var(--green);
+    border-radius: 50%;
+    animation: blink 2s ease-in-out infinite;
+  }
+
+  @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.4} }
+
+  /* PAGES */
+  .page { display: none; padding: 48px 28px; max-width: 1000px; margin: 0 auto; position: relative; z-index: 1; }
+  .page.active { display: block; animation: fadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1); }
+
+  @keyframes fadeIn { from{opacity:0;transform:translateY(12px)} to{opacity:1;transform:translateY(0)} }
+
+  /* SECTION TITLE (Apple Hero Style) */
+  .page-header-wrapper {
+    text-align: center;
+    margin-bottom: 48px;
+  }
+
+  .section-title {
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 8px;
+  }
+
+  .page-headline {
+    font-size: clamp(36px, 5vw, 56px);
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    line-height: 1.05;
+    color: var(--text);
+    margin-bottom: 12px;
+  }
+
+  .page-sub {
+    font-size: 19px;
+    color: var(--muted);
+    line-height: 1.4;
+    max-width: 600px;
+    margin: 0 auto;
+    letter-spacing: -0.01em;
+  }
+
+  /* CARDS */
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 18px;
+    padding: 24px;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.02);
+  }
+
+  .card-title {
+    font-size: 15px;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    color: var(--text);
+    margin-bottom: 16px;
+  }
+
+  /* GRID */
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+  .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+  .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; }
+
+  @media (max-width: 768px) {
+    .grid-2, .grid-3, .grid-4 { grid-template-columns: 1fr; }
+    .nav-tabs { display: none; }
+  }
+
+  /* STAT BLOCKS */
+  .stat-block {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 20px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.01);
+  }
+
+  .stat-label {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--muted);
+    margin-bottom: 8px;
+  }
+
+  .stat-value {
+    font-size: 36px;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    line-height: 1;
+    margin-bottom: 6px;
+  }
+
+  .stat-value.green { color: var(--green); }
+  .stat-value.yellow { color: var(--yellow); }
+  .stat-value.red { color: var(--red); }
+  .stat-value.blue { color: var(--blue); }
+
+  .stat-delta {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--muted);
+  }
+
+  /* BUTTONS */
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 12px 24px;
+    border-radius: 980px;
+    border: none;
+    font-family: var(--sans);
+    font-weight: 500;
+    font-size: 15px;
+    cursor: pointer;
+    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    text-decoration: none;
+  }
+
+  .btn-primary {
+    background: var(--accent);
+    color: #fff;
+  }
+
+  .btn-primary:hover {
+    background: #0077ed;
+    transform: scale(1.02);
+  }
+
+  .btn-outline {
+    background: transparent;
+    color: var(--accent);
+    border: 1px solid var(--accent);
+  }
+
+  .btn-outline:hover {
+    background: var(--accent-dim);
+  }
+
+  .btn-danger {
+    background: var(--red-dim);
+    color: var(--red);
+    border: 1px solid rgba(255,59,48,0.2);
+  }
+
+  /* FORM ELEMENTS */
+  .form-group { margin-bottom: 20px; }
+
+  .form-label {
+    display: block;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text);
+    margin-bottom: 8px;
+  }
+
+  .form-input, .form-select {
+    width: 100%;
+    background: var(--surface2);
+    border: 1px solid transparent;
+    border-radius: 12px;
+    padding: 14px 16px;
+    color: var(--text);
+    font-family: var(--sans);
+    font-size: 15px;
+    transition: all 0.2s;
+    outline: none;
+  }
+
+  .form-input:focus, .form-select:focus {
+    background: var(--surface);
+    border-color: var(--accent);
+    box-shadow: 0 0 0 4px var(--accent-dim);
+  }
+
+  /* TIER CARDS */
+  .tier-cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-bottom: 24px; }
+
+  .tier-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 20px;
+    cursor: pointer;
+    transition: all 0.2s;
+    text-align: center;
+  }
+
+  .tier-card:hover { border-color: var(--muted-light); }
+  .tier-card.selected {
+    border-color: var(--accent);
+    background: var(--accent-dim);
+    box-shadow: 0 0 0 1px var(--accent);
+  }
+
+  .tier-name {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--text);
+    margin-bottom: 8px;
+  }
+
+  .tier-price {
+    font-size: 32px;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    color: var(--text);
+    margin-bottom: 4px;
+  }
+
+  /* AQI MONITOR */
+  .aqi-ring {
+    position: relative;
+    width: 200px; height: 200px;
+    margin: 0 auto 24px;
+  }
+
+  .aqi-ring svg { transform: rotate(-90deg); }
+
+  .aqi-value {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+  }
+
+  .aqi-number {
+    font-size: 56px;
+    font-weight: 500;
+    letter-spacing: -0.03em;
+    line-height: 1;
+    margin-bottom: 4px;
+  }
+
+  .aqi-label-text {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--muted);
+  }
+
+  /* TRIGGER STATUS BAR */
+  .trigger-bar {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 16px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 12px;
+    transition: all 0.3s;
+  }
+
+  .trigger-bar.active { border-color: var(--green); background: var(--green-dim); }
+  .trigger-bar.warning { border-color: var(--yellow); background: var(--yellow-dim); }
+  .trigger-bar.critical {
+    border-color: var(--red);
+    background: var(--red-dim);
+    animation: pulse-red 2s infinite;
+  }
+
+  @keyframes pulse-red {
+    0% { box-shadow: 0 0 0 0 rgba(255,59,48,0.4); }
+    70% { box-shadow: 0 0 0 10px rgba(255,59,48,0); }
+    100% { box-shadow: 0 0 0 0 rgba(255,59,48,0); }
+  }
+
+  .trigger-name { font-size: 15px; font-weight: 600; color: var(--text); }
+  .trigger-val { font-size: 15px; font-weight: 500; color: var(--text); }
+
+  .trigger-badge {
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    padding: 4px 10px;
+    border-radius: 980px;
+  }
+
+  .badge-safe { background: var(--green-dim); color: #248a3d; }
+  .badge-warn { background: var(--yellow-dim); color: #b26800; }
+  .badge-crit { background: var(--red-dim); color: var(--red); }
+
+  /* WORKER ROWS */
+  .worker-row {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 14px 16px;
+    border-radius: 12px;
+    border: 1px solid transparent;
+    border-bottom: 1px solid var(--border);
+    transition: all 0.2s;
+  }
+  .worker-row:last-child { border-bottom: none; }
+  .worker-row:hover { background: var(--surface2); }
+
+  .worker-avatar {
+    width: 40px; height: 40px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px;
+    flex-shrink: 0;
+  }
+
+  .worker-info { flex: 1; }
+  .worker-name { font-size: 15px; font-weight: 600; color: var(--text); margin-bottom: 2px; }
+  .worker-meta { font-size: 13px; color: var(--muted); }
+
+  .friction-bar {
+    width: 80px;
+    height: 6px;
+    background: var(--surface2);
+    border-radius: 3px;
+    overflow: hidden;
+  }
+
+  .friction-fill {
+    height: 100%;
+    border-radius: 3px;
+    transition: width 0.5s ease;
+  }
+
+  /* PAYOUT FEED */
+  .payout-item {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 16px 0;
+    border-bottom: 1px solid var(--border);
+    animation: slideIn 0.4s ease;
+  }
+
+  .payout-item:last-child { border-bottom: none; }
+
+  @keyframes slideIn {
+    from { opacity: 0; transform: translateX(-10px); }
+    to { opacity: 1; transform: translateX(0); }
+  }
+
+  .payout-icon {
+    width: 44px; height: 44px;
+    border-radius: 12px;
+    background: var(--green-dim);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 20px;
+    flex-shrink: 0;
+  }
+
+  .payout-details { flex: 1; }
+  .payout-name { font-size: 15px; font-weight: 600; color: var(--text); }
+  .payout-meta { font-size: 13px; color: var(--muted); margin-top: 2px; }
+
+  .payout-amount {
+    font-size: 17px;
+    font-weight: 600;
+    color: #248a3d;
+  }
+
+  /* PROGRESS */
+  .progress-bar {
+    height: 6px;
+    background: var(--surface2);
+    border-radius: 3px;
+    overflow: hidden;
+    margin-top: 8px;
+  }
+
+  .progress-fill {
+    height: 100%;
+    border-radius: 3px;
+    transition: width 1s ease;
+  }
+
+  /* FRICTION SCORE VISUAL */
+  .friction-score-big {
+    font-size: 72px;
+    font-weight: 500;
+    letter-spacing: -0.04em;
+    line-height: 1;
+    margin-bottom: 4px;
+  }
+
+  .factor-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 14px;
+  }
+
+  .factor-label { font-size: 13px; font-weight: 500; flex: 1; color: var(--text); }
+  .factor-weight { font-size: 12px; color: var(--muted); width: 35px; text-align: right; }
+
+  .factor-track {
+    flex: 2;
+    height: 6px;
+    background: var(--surface2);
+    border-radius: 3px;
+    overflow: hidden;
+  }
+
+  .factor-fill {
+    height: 100%;
+    border-radius: 3px;
+    transition: width 0.8s ease;
+  }
+
+  .factor-pct {
+    font-size: 12px;
+    font-weight: 600;
+    width: 35px;
+    text-align: right;
+  }
+
+  /* NOTIFICATION */
+  .notification {
+    position: fixed;
+    bottom: 32px;
+    right: 32px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 20px 24px;
+    max-width: 360px;
+    z-index: 1000;
+    transform: translateY(100px);
+    opacity: 0;
+    transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    box-shadow: 0 12px 40px rgba(0,0,0,0.12);
+  }
+
+  .notification.show {
+    transform: translateY(0);
+    opacity: 1;
+  }
+
+  .notif-title { font-size: 15px; font-weight: 600; margin-bottom: 4px; }
+  .notif-body { font-size: 14px; color: var(--muted); line-height: 1.4; }
+
+  /* TIMELINE */
+  .timeline { position: relative; padding-left: 28px; }
+  .timeline::before {
+    content: '';
+    position: absolute;
+    left: 7px; top: 6px; bottom: 6px;
+    width: 2px;
+    background: var(--surface2);
+  }
+
+  .timeline-item {
+    position: relative;
+    margin-bottom: 24px;
+  }
+
+  .timeline-item::before {
+    content: '';
+    position: absolute;
+    left: -26px; top: 4px;
+    width: 10px; height: 10px;
+    border-radius: 50%;
+    background: var(--accent);
+    border: 2px solid var(--surface);
+  }
+
+  .timeline-item.pending::before { background: var(--border); }
+  .timeline-item.future::before { background: var(--surface2); border: none; left: -24px; width: 6px; height: 6px; top: 6px;}
+
+  .timeline-time {
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--muted);
+    margin-bottom: 4px;
+  }
+
+  .timeline-text { font-size: 14px; font-weight: 500; color: var(--text); }
+
+  /* ENROLL SUCCESS */
+  .success-shield {
+    width: 96px; height: 96px;
+    background: var(--green);
+    border-radius: 50%;
+    margin: 0 auto 24px;
+    display: flex; align-items: center; justify-content: center;
+    color: white;
+    font-size: 44px;
+    box-shadow: 0 12px 32px var(--green-dim);
+    animation: pop 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  @keyframes pop {
+    0% { transform: scale(0.8); opacity: 0; }
+    100% { transform: scale(1); opacity: 1; }
+  }
+
+  .simulate-btn {
+    background: var(--surface2);
+    color: var(--text);
+    border: none;
+    padding: 8px 16px;
+    border-radius: 980px;
+    font-family: var(--sans);
+    font-weight: 500;
+    font-size: 13px;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .simulate-btn:hover {
+    background: var(--border);
+  }
+
+  .slider-group { margin-bottom: 16px; }
+  .slider-label {
+    display: flex; justify-content: space-between;
+    font-size: 13px; color: var(--text); font-weight: 500;
+    margin-bottom: 12px;
+  }
+
+  input[type=range] {
+    width: 100%;
+    -webkit-appearance: none;
+    height: 6px;
+    border-radius: 3px;
+    background: var(--surface2);
+    outline: none;
+    cursor: pointer;
+  }
+
+  input[type=range]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 24px; height: 24px;
+    border-radius: 50%;
+    background: #fff;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+    cursor: pointer;
+    transition: transform 0.1s;
+  }
+
+  input[type=range]::-webkit-slider-thumb:hover { transform: scale(1.1); }
+
+  .chart-bar-group {
+    display: flex;
+    align-items: flex-end;
+    gap: 8px;
+    height: 140px;
+    padding-top: 10px;
+  }
+
+  .chart-bar-wrap { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 8px; }
+
+  .chart-bar {
+    width: 100%;
+    border-radius: 6px 6px 0 0;
+    transition: height 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+    min-height: 4px;
+  }
+
+  .chart-bar-label { font-size: 12px; color: var(--muted); font-weight: 500; }
+
+  .map-placeholder {
+    background: var(--surface2);
+    border-radius: 14px;
+    height: 240px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 12px;
+    color: var(--muted);
+    font-size: 14px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .map-dot {
+    position: absolute;
+    width: 12px; height: 12px;
+    border-radius: 50%;
+    background: var(--accent);
+    box-shadow: 0 0 0 4px var(--accent-dim);
+    animation: ping 2s ease-out infinite;
+  }
+
+  @keyframes ping {
+    0% { box-shadow: 0 0 0 0 rgba(0, 113, 227, 0.4); }
+    100% { box-shadow: 0 0 0 24px transparent; }
+  }
+
+  .policy-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 28px;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.04);
+  }
+
+  .policy-card::after {
+    content: '🛡';
+    position: absolute;
+    top: -20px;
+    right: -20px;
+    font-size: 160px;
+    opacity: 0.03;
+    pointer-events: none;
+  }
+
+  /* MOBILE NAV */
+  .mobile-nav {
+    display: none;
+    position: fixed;
+    bottom: 0; left: 0; right: 0;
+    background: rgba(255, 255, 255, 0.9);
+    border-top: 1px solid var(--border);
+    padding: 12px 0 24px;
+    z-index: 100;
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+  }
+
+  .mobile-nav-items {
+    display: flex;
+    justify-content: space-around;
+  }
+
+  .mobile-nav-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    padding: 6px 12px;
+    border-radius: 8px;
+    border: none;
+    background: transparent;
+    color: var(--muted);
+    font-family: var(--sans);
+    font-size: 10px;
+    font-weight: 500;
+    cursor: pointer;
+  }
+
+  .mobile-nav-item.active { color: var(--accent); }
+  .mobile-nav-icon { font-size: 24px; margin-bottom: 2px; }
+
+  @media (max-width: 768px) {
+    .mobile-nav { display: block; }
+    .page { padding: 32px 20px 100px; }
+    .tier-cards { grid-template-columns: 1fr; }
+    .grid-3, .grid-4 { grid-template-columns: 1fr 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<header class="header">
+  <div class="logo">
+    <div class="logo-shield">🛡</div>
+    Gig-Shield
+  </div>
+  <nav class="nav-tabs">
+    <button class="nav-tab active" onclick="showPage('dashboard')">Dashboard</button>
+    <button class="nav-tab" onclick="showPage('enroll')">Enroll</button>
+    <button class="nav-tab" onclick="showPage('monitor')">Live Monitor</button>
+    <button class="nav-tab" onclick="showPage('fraud')">Fraud Engine</button>
+    <button class="nav-tab" onclick="showPage('payouts')">Payouts</button>
+  </nav>
+  <div class="status-pill">
+    <div class="status-dot"></div>
+    LIVE · Delhi-NCR
+  </div>
+</header>
+
+<div id="page-dashboard" class="page active">
+  <div class="page-header-wrapper">
+    <div class="section-title">Overview</div>
+    <div class="page-headline">Parametric Income Shield.</div>
+    <p class="page-sub">Real-time income protection for India's gig delivery workers. Zero paperwork. Instant payouts.</p>
+  </div>
+
+  <div class="grid-4" style="margin-bottom:32px">
+    <div class="stat-block">
+      <div class="stat-label">Active Policies</div>
+      <div class="stat-value text">2,847</div>
+      <div class="stat-delta" style="color:var(--green)">↑ 12% this week</div>
+    </div>
+    <div class="stat-block">
+      <div class="stat-label">Payouts Today</div>
+      <div class="stat-value blue" id="stat-payouts">₹3.2L</div>
+      <div class="stat-delta" style="color:var(--blue)">Active trigger</div>
+    </div>
+    <div class="stat-block">
+      <div class="stat-label">Yellow Reviews</div>
+      <div class="stat-value yellow" id="stat-yellow">34</div>
+      <div class="stat-delta">8 pending action</div>
+    </div>
+    <div class="stat-block">
+      <div class="stat-label">Fraud Blocked</div>
+      <div class="stat-value red" id="stat-fraud">127</div>
+      <div class="stat-delta" style="color:var(--green)">₹76K saved today</div>
+    </div>
+  </div>
+
+  <div class="grid-2" style="margin-bottom:32px">
+    <div class="policy-card">
+      <div class="card-title" style="color:var(--accent)">Your Policy · Active</div>
+      <div style="font-size:28px;font-weight:600;letter-spacing:-0.02em;margin-bottom:4px">Ravi Kumar</div>
+      <div style="font-size:15px;color:var(--muted);margin-bottom:32px">Zepto Rider · Delhi-NCR Zone 4</div>
+
+      <div style="display:flex;gap:32px;margin-bottom:32px">
+        <div>
+          <div style="font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:6px">Tier</div>
+          <div style="font-size:20px;font-weight:600;color:var(--text)" id="dash-tier">Standard</div>
+        </div>
+        <div>
+          <div style="font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:6px">Premium</div>
+          <div style="font-size:20px;font-weight:600" id="dash-premium">₹45/wk</div>
+        </div>
+        <div>
+          <div style="font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:6px">Cover</div>
+          <div style="font-size:20px;font-weight:600;color:var(--accent)" id="dash-cover">₹800/day</div>
+        </div>
+      </div>
+
+      <div style="background:var(--green-dim);border:1px solid rgba(52,199,89,0.2);border-radius:14px;padding:16px 20px;display:flex;align-items:center;gap:16px">
+        <div style="width:12px;height:12px;background:var(--green);border-radius:50%;box-shadow:0 0 0 4px rgba(52,199,89,0.2)"></div>
+        <div>
+          <div style="font-size:15px;font-weight:600;color:#248a3d;margin-bottom:2px">No Active Trigger</div>
+          <div style="font-size:13px;color:var(--muted)">AQI: 287 PM2.5 · Threshold: 400 · Monitoring</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Weekly Payout History</div>
+      <div class="chart-bar-group" id="weekly-chart"></div>
+      <div style="font-size:13px;color:var(--muted);margin-top:20px;text-align:center">Last 8 weeks — Blue = Payout received · Gray = No trigger</div>
+    </div>
+  </div>
+
+  <div class="card" style="margin-bottom:32px">
+    <div class="card-title">Live Parametric Triggers — Delhi-NCR</div>
+    <div id="trigger-list"></div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Recent Activity</div>
+    <div class="timeline" id="activity-timeline"></div>
+  </div>
+</div>
+
+<div id="page-enroll" class="page">
+  <div id="enroll-form-view">
+    <div class="page-header-wrapper">
+      <div class="section-title">Enrollment</div>
+      <div class="page-headline">Get protected in 3 minutes.</div>
+      <p class="page-sub">No documents. No medical tests. Linked directly to your Zepto or Swiggy account.</p>
+    </div>
+
+    <div class="grid-2">
+      <div>
+        <div class="card" style="margin-bottom:24px">
+          <div class="card-title">Personal Details</div>
+          <div class="form-group">
+            <label class="form-label">Full Name</label>
+            <input class="form-input" id="enroll-name" type="text" placeholder="Ravi Kumar" value="Ravi Kumar">
+          </div>
+          <div class="form-group">
+            <label class="form-label">UPI ID</label>
+            <input class="form-input" id="enroll-upi" type="text" placeholder="ravi@upi" value="ravi@upi">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Platform</label>
+            <select class="form-select" id="enroll-platform">
+              <option value="zepto">Zepto Quick Commerce</option>
+              <option value="zomato">Zomato</option>
+              <option value="swiggy">Swiggy</option>
+              <option value="blinkit">Blinkit</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Operational Zone</label>
+            <select class="form-select" id="enroll-zone">
+              <option>Delhi-NCR Zone 4 (Dwarka)</option>
+              <option>Delhi-NCR Zone 2 (Connaught Place)</option>
+              <option>Delhi-NCR Zone 7 (Noida)</option>
+              <option>Delhi-NCR Zone 3 (Gurgaon)</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-title">Risk Triggers</div>
+          <div style="display:flex;flex-wrap:wrap;gap:12px">
+            <label style="display:flex;align-items:center;gap:8px;cursor:pointer;font-size:15px;width:100%">
+              <input type="checkbox" checked style="accent-color:var(--accent);width:18px;height:18px"> AQI > 400 (PM2.5)
+            </label>
+            <label style="display:flex;align-items:center;gap:8px;cursor:pointer;font-size:15px;width:100%">
+              <input type="checkbox" checked style="accent-color:var(--accent);width:18px;height:18px"> Heavy Rainfall > 50mm
+            </label>
+            <label style="display:flex;align-items:center;gap:8px;cursor:pointer;font-size:15px;width:100%">
+              <input type="checkbox" style="accent-color:var(--accent);width:18px;height:18px"> Civic Curfew / Section 144
+            </label>
+            <label style="display:flex;align-items:center;gap:8px;cursor:pointer;font-size:15px;width:100%">
+              <input type="checkbox" style="accent-color:var(--accent);width:18px;height:18px"> Friction Score Trigger
+            </label>
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <div class="card" style="margin-bottom:24px">
+          <div class="card-title">Choose Coverage Tier</div>
+          <div class="tier-cards" style="grid-template-columns:1fr">
+            <div class="tier-card" data-tier="basic" data-premium="₹20/week" data-cover="₹500/day" onclick="selectTier(this)">
+              <div style="display:flex;justify-content:space-between;align-items:center">
+                <div class="tier-name">Basic</div>
+                <div class="tier-price">₹20<span style="font-size:15px;color:var(--muted)">/wk</span></div>
+              </div>
+              <div style="font-size:14px;color:var(--muted);margin:8px 0;text-align:left">₹500/day cover · Max 2 days/week</div>
+              <div class="progress-bar"><div class="progress-fill" style="width:33%;background:var(--muted-light)"></div></div>
+            </div>
+            
+            <div class="tier-card selected" data-tier="standard" data-premium="₹45/week" data-cover="₹800/day" onclick="selectTier(this)">
+              <div style="display:flex;justify-content:space-between;align-items:center">
+                <div class="tier-name" style="color:var(--accent)">Standard</div>
+                <div class="tier-price" style="color:var(--accent)">₹45<span style="font-size:15px;color:var(--accent)">/wk</span></div>
+              </div>
+              <div style="font-size:14px;color:var(--text);margin:8px 0;text-align:left">₹800/day cover · Max 3 days/week</div>
+              <div class="progress-bar"><div class="progress-fill" style="width:66%;background:var(--accent)"></div></div>
+            </div>
+            
+            <div class="tier-card" data-tier="premium" data-premium="₹80/week" data-cover="₹1,200/day" onclick="selectTier(this)">
+              <div style="display:flex;justify-content:space-between;align-items:center">
+                <div class="tier-name">Premium</div>
+                <div class="tier-price">₹80<span style="font-size:15px;color:var(--muted)">/wk</span></div>
+              </div>
+              <div style="font-size:14px;color:var(--muted);margin:8px 0;text-align:left">₹1,200/day cover · Max 5 days/week</div>
+              <div class="progress-bar"><div class="progress-fill" style="width:100%;background:var(--muted-light)"></div></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card" style="margin-bottom:24px">
+          <div class="card-title">Anti-Fraud Consent</div>
+          <div style="font-size:14px;color:var(--muted);line-height:1.5;margin-bottom:16px">
+            To prevent fraudulent claims and protect the pool, Gig-Shield requires access to:
+          </div>
+          <label style="display:flex;align-items:flex-start;gap:12px;cursor:pointer;margin-bottom:12px">
+            <input type="checkbox" checked style="accent-color:var(--accent);margin-top:2px;width:16px;height:16px">
+            <span style="font-size:14px;color:var(--text)">Accelerometer & gyroscope data during active claim events</span>
+          </label>
+          <label style="display:flex;align-items:flex-start;gap:12px;cursor:pointer">
+            <input type="checkbox" checked style="accent-color:var(--accent);margin-top:2px;width:16px;height:16px">
+            <span style="font-size:14px;color:var(--text)">Cell tower IDs & Wi-Fi BSSID hashes (anonymized)</span>
+          </label>
+        </div>
+
+        <button class="btn btn-primary" style="width:100%;font-size:17px;padding:18px" onclick="submitEnrollment()">
+          Activate My Gig-Shield
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div id="enroll-success-view" style="display:none;text-align:center;padding:60px 0">
+    <div class="success-shield">✓</div>
+    <div class="page-headline" style="font-size:42px">You're Protected.</div>
+    <div class="page-sub" style="margin-bottom:48px">Policy activated. First premium scheduled for Monday.</div>
+    
+    <div class="policy-card" style="text-align:left;max-width:440px;margin:0 auto 32px;background:var(--surface2)">
+      <div style="font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:16px">Policy Details</div>
+      <div id="success-name" style="font-size:24px;font-weight:600;margin-bottom:4px;color:var(--text)"></div>
+      <div id="success-meta" style="font-size:15px;color:var(--muted);margin-bottom:24px"></div>
+      
+      <div style="display:flex;justify-content:space-between;align-items:flex-end">
+          <div>
+              <div id="success-tier" style="font-size:32px;font-weight:600;color:var(--text);margin-bottom:4px;letter-spacing:-0.02em"></div>
+              <div id="success-cover" style="font-size:15px;color:var(--muted)"></div>
+          </div>
+      </div>
+      
+      <div style="margin-top:24px;padding-top:24px;border-top:1px solid var(--border)">
+        <div style="font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:4px">Policy ID</div>
+        <div id="success-id" style="font-family:var(--mono);font-size:15px;color:var(--text)"></div>
+      </div>
+    </div>
+    
+    <button class="btn btn-primary" onclick="showPage('monitor')">View Live Monitor</button>
+  </div>
+</div>
+
+<div id="page-monitor" class="page">
+  <div class="page-header-wrapper">
+    <div class="section-title">Live Monitor</div>
+    <div class="page-headline">Real-time event tracking.</div>
+    <p class="page-sub">Parametric triggers update every 60 seconds from verified CPCB, IMD, and NDMA feeds.</p>
+  </div>
+
+  <div class="grid-2" style="margin-bottom:32px">
+    <div class="card" style="text-align:center">
+      <div class="card-title">AQI Monitor · Delhi-NCR</div>
+      <div class="aqi-ring">
+        <svg width="200" height="200" viewBox="0 0 200 200">
+          <circle cx="100" cy="100" r="80" fill="none" stroke="var(--surface2)" stroke-width="16"/>
+          <circle id="aqi-arc" cx="100" cy="100" r="80" fill="none" stroke="var(--yellow)" stroke-width="16"
+            stroke-dasharray="502.6" stroke-dashoffset="251.3" stroke-linecap="round"/>
+        </svg>
+        <div class="aqi-value">
+          <div class="aqi-number" id="aqi-number" style="color:var(--yellow)">287</div>
+          <div class="aqi-label-text">PM2.5</div>
+        </div>
+      </div>
+      <div style="font-size:15px;font-weight:600;color:var(--yellow);margin-bottom:4px" id="aqi-status-text">Unhealthy</div>
+      <div style="font-size:14px;color:var(--muted);margin-bottom:24px">Trigger threshold: 400 · <span id="aqi-gap" style="color:var(--text)">113 points away</span></div>
+      
+      <div class="slider-group">
+        <div class="slider-label">
+          <span>Simulate AQI Level</span>
+          <span id="aqi-slider-val" style="font-family:var(--mono)">287</span>
+        </div>
+        <input type="range" min="0" max="500" value="287" id="aqi-slider" oninput="updateAQI(this.value)">
+      </div>
+      
+      <div id="aqi-trigger-alert" style="display:none;background:var(--red-dim);border:1px solid rgba(255,59,48,0.2);border-radius:12px;padding:16px;margin-top:16px">
+        <div style="font-size:14px;font-weight:600;color:var(--red);margin-bottom:4px">Trigger Activated</div>
+        <div style="font-size:13px;color:var(--red);line-height:1.4">AQI exceeded 400 threshold. Payouts initiating for 847 enrolled riders.</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Friction Score Engine</div>
+      <div style="display:flex;align-items:baseline;gap:8px;margin-bottom:24px">
+        <div class="friction-score-big" id="friction-score-display" style="color:var(--yellow)">62</div>
+        <div style="font-size:20px;color:var(--muted);font-weight:500">/100</div>
+        <div style="margin-left:auto;font-size:12px;font-weight:600;color:#b26800;text-transform:uppercase;letter-spacing:0.05em;padding:4px 12px;background:var(--yellow-dim);border-radius:980px">Elevated</div>
+      </div>
+
+      <div id="friction-factors"></div>
+
+      <div style="border-top:1px solid var(--border);padding-top:20px;margin-top:16px">
+        <div style="font-size:13px;color:var(--text);font-weight:500;margin-bottom:10px">Trigger Threshold: 70</div>
+        <div class="progress-bar">
+          <div class="progress-fill" id="friction-progress" style="background:var(--yellow);width:62%"></div>
+        </div>
+        <div id="friction-trigger-msg" style="margin-top:12px;font-size:14px;color:var(--muted)">8 points below payout threshold</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card" style="margin-bottom:32px">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px">
+      <div class="card-title" style="margin:0">All Parametric Triggers</div>
+      <button class="simulate-btn" onclick="simulateCyclone()">Simulate Cyclone Alert</button>
+    </div>
+    <div id="all-triggers"></div>
+  </div>
+
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-title">Zone Coverage Map</div>
+      <div class="map-placeholder">
+        <div class="map-dot" style="top:40%;left:50%"></div>
+        <div class="map-dot" style="top:60%;left:35%;animation-delay:0.5s"></div>
+        <div class="map-dot" style="top:30%;left:65%;animation-delay:1s"></div>
+        <div style="font-size:32px;margin-bottom:8px">📍</div>
+        <div style="font-weight:500;color:var(--text)">Delhi-NCR Coverage Zones</div>
+        <div style="font-size:13px">847 active riders monitored</div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title">EventBridge Pulse Log</div>
+      <div id="event-log" style="font-family:var(--mono);font-size:13px;color:var(--muted);height:240px;overflow-y:auto;line-height:1.6"></div>
+    </div>
+  </div>
+</div>
+
+<div id="page-fraud" class="page">
+  <div class="page-header-wrapper">
+    <div class="section-title">AI Defense Engine</div>
+    <div class="page-headline">Sensor fusion and fraud detection.</div>
+    <p class="page-sub">Isolation Forest models detect syndicate patterns across 500+ workers in real-time, protecting the community pool.</p>
+  </div>
+
+  <div class="grid-3" style="margin-bottom:32px">
+    <div class="stat-block">
+      <div class="stat-label">Green · Auto-Paid</div>
+      <div class="stat-value green">1,248</div>
+      <div class="stat-delta">95%+ confidence</div>
+    </div>
+    <div class="stat-block">
+      <div class="stat-label">Yellow · Review</div>
+      <div class="stat-value yellow">34</div>
+      <div class="stat-delta">Image verification</div>
+    </div>
+    <div class="stat-block">
+      <div class="stat-label">Red · Blocked</div>
+      <div class="stat-value red">127</div>
+      <div class="stat-delta">Syndicate detected</div>
+    </div>
+  </div>
+
+  <div class="grid-2" style="margin-bottom:32px">
+    <div class="card">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px">
+        <div class="card-title" style="margin:0">Live Claim Triage</div>
+        <button class="simulate-btn" onclick="addFraudWorker()">Simulate Claim</button>
+      </div>
+      <div id="worker-list"></div>
+    </div>
+
+    <div>
+      <div class="card" style="margin-bottom:24px">
+        <div class="card-title">Syndicate Detection Alert</div>
+        <div id="syndicate-alert" style="background:var(--red-dim);border:1px solid rgba(255,59,48,0.2);border-radius:14px;padding:20px">
+          <div style="font-size:15px;font-weight:600;color:var(--red);margin-bottom:8px">Pattern Detected</div>
+          <div style="font-size:14px;color:var(--text);line-height:1.6">
+            <strong>127 workers</strong> flagged for identical Wi-Fi BSSID fingerprint despite claiming locations across <strong>8 different zones</strong>.<br><br>
+            Isolation Forest confidence: <span style="color:var(--red);font-weight:600">97.3%</span><br>
+            Estimated fraud value blocked: <span style="color:var(--green);font-weight:600">₹76,200</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">Sensor Fusion Signals</div>
+        <div id="sensor-signals"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Yellow Tier Verification Flow</div>
+    <div style="display:flex;gap:32px;flex-wrap:wrap">
+      <div style="flex:1;min-width:260px">
+        <div style="font-size:17px;font-weight:600;margin-bottom:8px;color:var(--text)">Worker: Meena S. · Zone 4</div>
+        <div style="font-size:14px;color:var(--muted);margin-bottom:20px;line-height:1.5">
+          Claim flagged: 1 anomalous signal detected (low accelerometer variance). Soft-flagged for Yellow Tier review.
+        </div>
+        <div style="background:var(--yellow-dim);border:1px solid rgba(255,149,0,0.2);border-radius:12px;padding:16px;margin-bottom:20px">
+          <div style="font-size:14px;font-weight:600;color:#b26800;margin-bottom:4px">Quick Verification Required</div>
+          <div style="font-size:13px;color:#b26800">Choose any one method to verify your claim:</div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:12px">
+          <button class="btn btn-outline" style="font-size:14px;justify-content:flex-start" onclick="verifyYellow('photo')">📸 Photo of surroundings</button>
+          <button class="btn btn-outline" style="font-size:14px;justify-content:flex-start" onclick="verifyYellow('screenshot')">📱 App unavailable screenshot</button>
+          <button class="btn btn-outline" style="font-size:14px;justify-content:flex-start" onclick="verifyYellow('delivery')">🛵 Platform status check</button>
+        </div>
+      </div>
+      <div style="flex:1;min-width:260px;display:flex;align-items:center;justify-content:center">
+        <div id="yellow-verify-result" style="width:100%">
+          <div style="text-align:center;padding:40px 20px;color:var(--muted);font-size:15px;background:var(--surface2);border-radius:16px">
+            Awaiting worker verification input...
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="page-payouts" class="page">
+  <div class="page-header-wrapper">
+    <div class="section-title">Payout Engine</div>
+    <div class="page-headline">Instant UPI transfers.</div>
+    <p class="page-sub">Powered by DynamoDB Streams and Razorpay. Average payout execution time: 8 minutes.</p>
+  </div>
+
+  <div class="grid-4" style="margin-bottom:32px">
+    <div class="stat-block">
+      <div class="stat-label">Today's Payouts</div>
+      <div class="stat-value green">₹3.2L</div>
+      <div class="stat-delta">1,248 riders paid</div>
+    </div>
+    <div class="stat-block">
+      <div class="stat-label">Avg. Payout Time</div>
+      <div class="stat-value blue">8m</div>
+      <div class="stat-delta">Target: 20 min</div>
+    </div>
+    <div class="stat-block">
+      <div class="stat-label">Success Rate</div>
+      <div class="stat-value text">99.1%</div>
+      <div class="stat-delta" style="color:var(--green)">UPI success</div>
+    </div>
+    <div class="stat-block">
+      <div class="stat-label">Pending</div>
+      <div class="stat-value yellow">34</div>
+      <div class="stat-delta">Yellow tier holds</div>
+    </div>
+  </div>
+
+  <div class="grid-2">
+    <div class="card">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px">
+        <div class="card-title" style="margin:0">Live Payout Feed</div>
+        <button class="simulate-btn" onclick="triggerPayout()">Trigger Demo</button>
+      </div>
+      <div id="payout-feed"></div>
+    </div>
+
+    <div>
+      <div class="card" style="margin-bottom:24px">
+        <div class="card-title">UPI Processing Pipeline</div>
+        <div class="timeline" id="payout-pipeline"></div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">Payout Distribution by Tier</div>
+        <div id="tier-distribution"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<nav class="mobile-nav">
+  <div class="mobile-nav-items">
+    <button class="mobile-nav-item active" onclick="showPage('dashboard')">
+      <span class="mobile-nav-icon">📊</span>Home
+    </button>
+    <button class="mobile-nav-item" onclick="showPage('enroll')">
+      <span class="mobile-nav-icon">🛡</span>Enroll
+    </button>
+    <button class="mobile-nav-item" onclick="showPage('monitor')">
+      <span class="mobile-nav-icon">📡</span>Monitor
+    </button>
+    <button class="mobile-nav-item" onclick="showPage('fraud')">
+      <span class="mobile-nav-icon">🔍</span>Fraud
+    </button>
+    <button class="mobile-nav-item" onclick="showPage('payouts')">
+      <span class="mobile-nav-icon">💸</span>Payouts
+    </button>
+  </div>
+</nav>
+
+<div class="notification" id="notification">
+  <div class="notif-title" id="notif-title">Payout Initiated</div>
+  <div class="notif-body" id="notif-body">Your claim has been verified and ₹800 sent to your UPI.</div>
+</div>
+
+<script>
+// ============ STATE ============
+let enrolledTier = { name: 'Standard', premium: '₹45/week', cover: '₹800/day' };
+let aqiValue = 287;
+let frictionValues = { traffic: 72, network: 45, env: 68, zone: 40 };
+let payoutFeedData = [];
+let workerList = [];
+let eventLogLines = [];
+
+// ============ NAV ============
+function showPage(id) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.mobile-nav-item').forEach(t => t.classList.remove('active'));
+
+  document.getElementById('page-' + id).classList.add('active');
+
+  const tabs = document.querySelectorAll('.nav-tab');
+  const pages = ['dashboard','enroll','monitor','fraud','payouts'];
+  tabs[pages.indexOf(id)]?.classList.add('active');
+
+  const mobileItems = document.querySelectorAll('.mobile-nav-item');
+  mobileItems[pages.indexOf(id)]?.classList.add('active');
+  window.scrollTo({top: 0, behavior: 'smooth'});
+}
+
+// ============ NOTIFICATION ============
+function showNotif(title, body, color='var(--accent)') {
+  const n = document.getElementById('notification');
+  document.getElementById('notif-title').textContent = title;
+  document.getElementById('notif-title').style.color = color;
+  document.getElementById('notif-body').textContent = body;
+  n.style.borderLeft = `4px solid ${color}`;
+  n.classList.add('show');
+  setTimeout(() => n.classList.remove('show'), 4000);
+}
+
+// ============ DASHBOARD ============
+function initWeeklyChart() {
+  const container = document.getElementById('weekly-chart');
+  const data = [0,800,0,800,0,0,1200,0];
+  const labels = ['W1','W2','W3','W4','W5','W6','W7','W8'];
+  container.innerHTML = data.map((v,i) => `
+    <div class="chart-bar-wrap">
+      <div class="chart-bar" style="height:${v?Math.max(v/12,8):8}px;background:${v?'var(--accent)':'var(--surface2)'}"></div>
+      <div class="chart-bar-label">${labels[i]}</div>
+    </div>
+  `).join('');
+}
+
+function initTriggers() {
+  const triggers = [
+    { name: 'AQI PM2.5', source: 'CPCB Feed', val: '287', unit: 'AQI', threshold: 400, state: 'warning', zone: 'Delhi-NCR' },
+    { name: 'Rainfall', source: 'IMD API', val: '12', unit: 'mm', threshold: 50, state: 'active', zone: 'Delhi' },
+    { name: 'Wind Speed', source: 'OpenWeatherMap', val: '18', unit: 'km/h', threshold: 80, state: 'active', zone: 'NCR' },
+    { name: 'Civic Curfew', source: 'Govt. API', val: 'None', unit: '', threshold: null, state: 'active', zone: 'All' },
+  ];
+  const container = document.getElementById('trigger-list');
+  container.innerHTML = triggers.map(t => `
+    <div class="trigger-bar ${t.state==='warning'?'warning':''}">
+      <div>
+        <div class="trigger-name">${t.name} <span style="font-size:13px;color:var(--muted);font-weight:400;margin-left:6px">${t.zone}</span></div>
+        <div style="font-size:12px;color:var(--muted);margin-top:4px">${t.source}</div>
+      </div>
+      <div class="trigger-val">
+        ${t.val}${t.unit?` <span style="font-size:12px;color:var(--muted)">${t.unit}</span>`:''}
+        ${t.threshold?`<span style="font-size:12px;color:var(--muted);margin-left:4px">/ ${t.threshold}</span>`:''}
+      </div>
+      <div class="trigger-badge ${t.state==='warning'?'badge-warn':'badge-safe'}">${t.state==='warning'?'ELEVATED':'NORMAL'}</div>
+    </div>
+  `).join('');
+}
+
+function initTimeline() {
+  const items = [
+    { time: '14:32', text: 'AQI crossed 280 in Zone 4 — monitoring elevated', done: true },
+    { time: '13:55', text: 'Friction score reached 62 — approaching threshold', done: true },
+    { time: '11:20', text: 'Weekly premium ₹45 debited successfully', done: true },
+    { time: '09:00', text: 'Policy renewed for week starting Mon, Mar 20', done: true },
+    { time: '—', text: 'Next AQI evaluation in 28 minutes', done: false },
+  ];
+  document.getElementById('activity-timeline').innerHTML = items.map((item,i) => `
+    <div class="timeline-item ${i===items.length-1?'future':''}">
+      <div class="timeline-time">${item.time}</div>
+      <div class="timeline-text" style="color:${i===items.length-1?'var(--muted)':'var(--text)'}">${item.text}</div>
+    </div>
+  `).join('');
+}
+
+// ============ ENROLL ============
+function selectTier(el) {
+  document.querySelectorAll('.tier-card').forEach(c => c.classList.remove('selected'));
+  document.querySelectorAll('.tier-name, .tier-price span, .tier-price').forEach(t => t.style.color = '');
+  document.querySelectorAll('.progress-fill').forEach(p => p.style.background = 'var(--muted-light)');
+  
+  el.classList.add('selected');
+  el.querySelector('.tier-name').style.color = 'var(--accent)';
+  el.querySelector('.tier-price').style.color = 'var(--accent)';
+  el.querySelector('.tier-price span').style.color = 'var(--accent)';
+  el.querySelector('.progress-fill').style.background = 'var(--accent)';
+  
+  enrolledTier = {
+    name: el.dataset.tier.charAt(0).toUpperCase() + el.dataset.tier.slice(1),
+    premium: el.dataset.premium,
+    cover: el.dataset.cover
+  };
+}
+
+function submitEnrollment() {
+  const name = document.getElementById('enroll-name').value || 'Ravi Kumar';
+  const platform = document.getElementById('enroll-platform').value;
+  const zone = document.getElementById('enroll-zone').value;
+  const policyId = 'GS-' + Date.now().toString(36).toUpperCase();
+
+  document.getElementById('success-name').textContent = name;
+  document.getElementById('success-meta').textContent = `${platform.toUpperCase()} Rider · ${zone}`;
+  document.getElementById('success-tier').textContent = enrolledTier.name;
+  document.getElementById('success-cover').textContent = enrolledTier.cover + ' income replacement';
+  document.getElementById('success-id').textContent = policyId;
+
+  // Update dashboard
+  document.getElementById('dash-tier').textContent = enrolledTier.name;
+  document.getElementById('dash-premium').textContent = enrolledTier.premium.replace('week','wk');
+  document.getElementById('dash-cover').textContent = enrolledTier.cover;
+
+  document.getElementById('enroll-form-view').style.display = 'none';
+  document.getElementById('enroll-success-view').style.display = 'block';
+  showNotif('Policy Activated', `Welcome ${name}! Your Gig-Shield is now active.`, 'var(--green)');
+}
+
+// ============ AQI MONITOR ============
+function updateAQI(val) {
+  val = parseInt(val);
+  aqiValue = val;
+  document.getElementById('aqi-slider-val').textContent = val;
+  document.getElementById('aqi-number').textContent = val;
+
+  const arc = document.getElementById('aqi-arc');
+  const circumference = 502.6;
+  const pct = Math.min(val / 500, 1);
+  arc.style.strokeDashoffset = circumference - (pct * circumference);
+
+  let color, statusText;
+  if (val < 100) { color = 'var(--green)'; statusText = 'Good'; }
+  else if (val < 200) { color = '#34c759'; statusText = 'Moderate'; }
+  else if (val < 300) { color = 'var(--yellow)'; statusText = 'Unhealthy'; }
+  else if (val < 400) { color = '#ff9500'; statusText = 'Very Unhealthy'; }
+  else { color = 'var(--red)'; statusText = 'Hazardous — Trigger!'; }
+
+  arc.style.stroke = color;
+  document.getElementById('aqi-number').style.color = color;
+  document.getElementById('aqi-status-text').textContent = statusText;
+  document.getElementById('aqi-status-text').style.color = color;
+
+  if (val >= 400) {
+    document.getElementById('aqi-gap').textContent = 'THRESHOLD EXCEEDED';
+    document.getElementById('aqi-gap').style.color = 'var(--red)';
+    document.getElementById('aqi-trigger-alert').style.display = 'block';
+    showNotif('AQI Trigger Activated', `PM2.5 = ${val}. Payouts initiating for 847 enrolled riders.`, 'var(--red)');
+  } else {
+    document.getElementById('aqi-gap').textContent = `${400 - val} points away`;
+    document.getElementById('aqi-gap').style.color = 'var(--text)';
+    document.getElementById('aqi-trigger-alert').style.display = 'none';
+  }
+}
+
+// ============ FRICTION SCORE ============
+function initFrictionFactors() {
+  const factors = [
+    { label: 'Traffic Congestion', key: 'traffic', weight: '40%', color: '#ff9500' },
+    { label: 'Network Degradation', key: 'network', weight: '30%', color: 'var(--accent)' },
+    { label: 'Environmental Risk', key: 'env', weight: '20%', color: '#ff9500' },
+    { label: 'Zone Activity Drop', key: 'zone', weight: '10%', color: 'var(--green)' },
+  ];
+
+  const score = Math.round(
+    frictionValues.traffic * 0.4 +
+    frictionValues.network * 0.3 +
+    frictionValues.env * 0.2 +
+    frictionValues.zone * 0.1
+  );
+
+  document.getElementById('friction-score-display').textContent = score;
+
+  const color = score >= 70 ? 'var(--red)' : score >= 50 ? 'var(--yellow)' : 'var(--green)';
+  document.getElementById('friction-score-display').style.color = color;
+  document.getElementById('friction-progress').style.width = score + '%';
+  document.getElementById('friction-progress').style.background = color;
+
+  const msg = score >= 70
+    ? 'Payout triggered for all active riders'
+    : `${70 - score} points below payout threshold`;
+  document.getElementById('friction-trigger-msg').textContent = msg;
+  document.getElementById('friction-trigger-msg').style.color = score >= 70 ? 'var(--green)' : 'var(--muted)';
+
+  document.getElementById('friction-factors').innerHTML = factors.map(f => `
+    <div class="factor-row">
+      <div class="factor-label">${f.label}</div>
+      <div class="factor-weight">${f.weight}</div>
+      <div class="factor-track">
+        <div class="factor-fill" style="width:${frictionValues[f.key]}%;background:${f.color}"></div>
+      </div>
+      <div class="factor-pct" style="color:${f.color}">${frictionValues[f.key]}%</div>
+    </div>
+  `).join('');
+}
+
+// ============ ALL TRIGGERS ============
+function initAllTriggers() {
+  const triggers = [
+    { name: 'Hazardous Air Quality', source: 'CPCB AQI Feed', val: '287 PM2.5', threshold: '>400', geo: 'Zone', state: 'warning' },
+    { name: 'Heavy Rainfall', source: 'IMD / OpenWeather', val: '12mm / 6h', threshold: '>50mm', geo: 'District', state: 'safe' },
+    { name: 'Cyclone / Storm', source: 'NDMA Alert API', val: 'No alert', threshold: 'Cat 1+', geo: 'State', state: 'safe' },
+    { name: 'Civic Curfew', source: 'Govt. Press API', val: 'No curfew', threshold: 'Order', geo: 'District', state: 'safe' },
+    { name: 'Friction Score', source: 'Multi-signal fusion', val: '62/100', threshold: '>70', geo: 'Zone', state: 'warning' },
+  ];
+
+  document.getElementById('all-triggers').innerHTML = triggers.map(t => `
+    <div class="trigger-bar ${t.state==='warning'?'warning':t.state==='critical'?'critical':''}">
+      <div style="flex:1">
+        <div class="trigger-name">${t.name}</div>
+        <div style="font-size:13px;color:var(--muted);margin-top:2px">${t.source} · ${t.geo}</div>
+      </div>
+      <div style="text-align:right;margin:0 16px">
+        <div class="trigger-val">${t.val}</div>
+        <div style="font-size:12px;color:var(--muted);margin-top:2px">Threshold: ${t.threshold}</div>
+      </div>
+      <div class="trigger-badge ${t.state==='warning'?'badge-warn':t.state==='critical'?'badge-crit':'badge-safe'}">
+        ${t.state==='warning'?'ELEVATED':t.state==='critical'?'TRIGGERED':'NORMAL'}
+      </div>
+    </div>
+  `).join('');
+}
+
+function simulateCyclone() {
+  const container = document.getElementById('all-triggers');
+  const rows = container.querySelectorAll('.trigger-bar');
+  rows[2].className = 'trigger-bar critical';
+  rows[2].querySelector('.trigger-val').textContent = 'Category 2';
+  rows[2].querySelector('.trigger-badge').textContent = 'TRIGGERED';
+  rows[2].querySelector('.trigger-badge').className = 'trigger-badge badge-crit';
+  showNotif('Cyclone Alert', 'NDMA Category 2 alert in Maharashtra. 1,200 policies activated.', 'var(--red)');
+  setTimeout(() => {
+    rows[2].className = 'trigger-bar';
+    rows[2].querySelector('.trigger-val').textContent = 'No alert';
+    rows[2].querySelector('.trigger-badge').textContent = 'NORMAL';
+    rows[2].querySelector('.trigger-badge').className = 'trigger-badge badge-safe';
+  }, 6000);
+}
+
+// ============ EVENT LOG ============
+function appendEventLog(msg) {
+  const now = new Date();
+  const ts = now.toLocaleTimeString('en-IN', {hour:'2-digit',minute:'2-digit',second:'2-digit'});
+  eventLogLines.unshift(`[${ts}] ${msg}`);
+  if (eventLogLines.length > 30) eventLogLines.pop();
+  const el = document.getElementById('event-log');
+  if (el) el.innerHTML = eventLogLines.map(l => `<div style="margin-bottom:8px;border-bottom:1px solid var(--surface2);padding-bottom:8px">${l}</div>`).join('');
+}
+
+// ============ FRAUD / WORKERS ============
+const workerData = [
+  { name: 'Amit Singh', zone: 'Zone 4 · Dwarka', tier: 'green', friction: 22, emoji: 'G', label: 'VERIFIED' },
+  { name: 'Priya Sharma', zone: 'Zone 2 · CP', tier: 'yellow', friction: 61, emoji: 'R', label: 'REVIEW' },
+  { name: 'Ramesh K.', zone: 'Zone 7 · Noida', tier: 'green', friction: 18, emoji: 'G', label: 'VERIFIED' },
+  { name: 'Suresh M.', zone: 'Zone 4 · Dwarka', tier: 'red', friction: 91, emoji: 'B', label: 'BLOCKED' },
+  { name: 'Kavitha R.', zone: 'Zone 3 · Gurgaon', tier: 'green', friction: 28, emoji: 'G', label: 'VERIFIED' },
+];
+
+function renderWorkerList() {
+  const container = document.getElementById('worker-list');
+  const list = [...workerData, ...workerList];
+  container.innerHTML = list.slice(0, 8).map(w => `
+    <div class="worker-row">
+      <div class="worker-avatar" style="background:var(--${w.tier==='red'?'red':w.tier==='yellow'?'yellow':'green'}-dim);color:var(--${w.tier});font-weight:600">
+        ${w.name.charAt(0)}
+      </div>
+      <div class="worker-info">
+        <div class="worker-name">${w.name}</div>
+        <div class="worker-meta">${w.zone}</div>
+      </div>
+      <div style="text-align:right">
+        <div style="font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:4px">Risk</div>
+        <div class="friction-bar">
+          <div class="friction-fill" style="width:${w.friction}%;background:var(--${w.tier})"></div>
+        </div>
+      </div>
+      <div class="trigger-badge ${w.tier==='red'?'badge-crit':w.tier==='yellow'?'badge-warn':'badge-safe'}" style="margin-left:8px;width:80px;text-align:center">${w.label}</div>
+    </div>
+  `).join('');
+}
+
+const fraudNames = ['Vinod T.','Deepak R.','Sonia G.','Ajay P.','Mohan L.','Lakshmi N.'];
+let fraudIdx = 0;
+function addFraudWorker() {
+  const tiers = ['green','green','yellow','red'];
+  const labels = ['VERIFIED','VERIFIED','REVIEW','BLOCKED'];
+  const t = Math.floor(Math.random() * tiers.length);
+  workerList.unshift({
+    name: fraudNames[fraudIdx % fraudNames.length],
+    zone: 'Zone ' + Math.ceil(Math.random()*7) + ' · Delhi',
+    tier: tiers[t],
+    friction: tiers[t]==='red' ? 80+Math.floor(Math.random()*20) : tiers[t]==='yellow' ? 50+Math.floor(Math.random()*20) : Math.floor(Math.random()*40),
+    label: labels[t]
+  });
+  fraudIdx++;
+  renderWorkerList();
+  const msgs = ['Auto-payout: ₹800 sent to UPI', 'Yellow tier: verification request sent', 'BLOCKED: Syndicate pattern match'];
+  showNotif(labels[t], msgs[Math.min(t,2)], t===3?'var(--red)':t===2?'var(--yellow)':'var(--green)');
+}
+
+function initSensorSignals() {
+  const signals = [
+    { label: 'Accelerometer Variance', val: 'Normal (0.42g)', ok: true },
+    { label: 'GPS Path Consistency', val: 'Match: 96%', ok: true },
+    { label: 'Mock Location Flag', val: 'DETECTED', ok: false },
+    { label: 'Wi-Fi BSSID Cluster', val: '127 workers same BSSID', ok: false },
+    { label: 'Cell Tower Match', val: 'Residential zone', ok: false },
+    { label: 'Temporal Consistency', val: 'Valid — 4hr exposure', ok: true },
+  ];
+  document.getElementById('sensor-signals').innerHTML = signals.map(s => `
+    <div style="display:flex;justify-content:space-between;align-items:center;padding:12px 0;border-bottom:1px solid var(--surface2)">
+      <div style="font-size:14px;color:var(--text);font-weight:500">${s.label}</div>
+      <div style="font-size:13px;color:${s.ok?'var(--green)':'var(--red)'};font-weight:600">${s.val}</div>
+    </div>
+  `).join('');
+}
+
+// ============ YELLOW VERIFY ============
+function verifyYellow(method) {
+  const methods = {
+    photo: { icon: '📸', label: 'Photo Confirmed', msg: 'CoreML scene classifier: Visibility < 50m detected. Smog indicators confirmed. Payout approved.' },
+    screenshot: { icon: '📱', label: 'Screenshot Confirmed', msg: 'Zepto service outage in Zone 4 confirmed via Vision API. Payout approved.' },
+    delivery: { icon: '🛵', label: 'Platform Confirmed', msg: 'Delivery platform API reports 0 active orders in Zone 4. Payout approved.' }
+  };
+  const m = methods[method];
+  document.getElementById('yellow-verify-result').innerHTML = `
+    <div style="background:var(--green-dim);border:1px solid rgba(52,199,89,0.2);border-radius:16px;padding:24px;text-align:center;width:100%">
+      <div style="font-size:48px;margin-bottom:12px">${m.icon}</div>
+      <div style="font-weight:600;font-size:17px;color:#248a3d;margin-bottom:8px">${m.label}</div>
+      <div style="font-size:14px;color:var(--text);line-height:1.5;margin-bottom:20px">${m.msg}</div>
+      <div style="font-size:28px;font-weight:600;color:#248a3d">₹800 → UPI</div>
+      <div style="font-size:13px;color:var(--muted);margin-top:8px">Estimated time: ~12 minutes</div>
+    </div>
+  `;
+  showNotif('Yellow Tier Verified', 'Claim approved. ₹800 payout initiated.', 'var(--green)');
+}
+
+// ============ PAYOUTS ============
+const payoutNames = ['Ravi K.','Priya S.','Amit T.','Kavitha M.','Rohit D.','Sunita P.','Manoj B.','Deepa R.'];
+const zones = ['Zone 2','Zone 4','Zone 7','Zone 3','Zone 5'];
+let pIdx = 0;
+
+function initPayoutFeed() {
+  for (let i = 0; i < 4; i++) {
+    payoutFeedData.push({
+      name: payoutNames[i],
+      zone: zones[i % zones.length],
+      amount: [500,800,1200][Math.floor(Math.random()*3)],
+      time: `${14-i}:${Math.floor(Math.random()*60).toString().padStart(2,'0')}`,
+      trigger: 'AQI'
+    });
+  }
+  renderPayoutFeed();
+}
+
+function renderPayoutFeed() {
+  document.getElementById('payout-feed').innerHTML = payoutFeedData.slice(0,8).map(p => `
+    <div class="payout-item">
+      <div class="payout-icon" style="background:var(--accent-dim);color:var(--accent)">₹</div>
+      <div class="payout-details">
+        <div class="payout-name">${p.name} <span style="color:var(--muted);font-size:13px;font-weight:400;margin-left:4px">${p.zone}</span></div>
+        <div class="payout-meta">${p.time} · ${p.trigger} Trigger · UPI Transfer</div>
+      </div>
+      <div class="payout-amount" style="color:var(--text)">₹${p.amount}</div>
+    </div>
+  `).join('');
+}
+
+function triggerPayout() {
+  const amount = [500,800,1200][Math.floor(Math.random()*3)];
+  const name = payoutNames[pIdx % payoutNames.length];
+  pIdx++;
+  payoutFeedData.unshift({
+    name, zone: zones[pIdx%zones.length], amount,
+    time: new Date().toLocaleTimeString('en-IN',{hour:'2-digit',minute:'2-digit'}),
+    trigger: ['AQI','Rain','Friction'][Math.floor(Math.random()*3)]
+  });
+  renderPayoutFeed();
+  showNotif('Payout Sent', `₹${amount} sent to ${name} via UPI.`, 'var(--accent)');
+  appendEventLog(`PAYOUT · ₹${amount} → ${name} (UPI)`);
+}
+
+function initPayoutPipeline() {
+  const steps = [
+    { text: 'EventBridge — AQI threshold crossed', done: true },
+    { text: 'Lambda — Policy evaluation (847 riders)', done: true },
+    { text: 'SageMaker — Defense Engine scoring', done: true },
+    { text: 'DynamoDB Stream — State: Active Payout', done: true },
+    { text: 'Lambda Payout — UPI transfer initiated', done: true, active: true },
+    { text: 'Razorpay — Transaction processing', pending: true },
+  ];
+  document.getElementById('payout-pipeline').innerHTML = steps.map(s => `
+    <div class="timeline-item ${s.pending?'pending':''}">
+      <div class="timeline-time">${s.pending?'Pending':'Completed'}</div>
+      <div class="timeline-text" style="color:${s.active?'var(--accent)':s.pending?'var(--muted)':'var(--text)'}">${s.text}</div>
+    </div>
+  `).join('');
+}
+
+function initTierDistribution() {
+  const tiers = [
+    { name: 'Basic', pct: 32, amount: '₹89,600', color: 'var(--muted)' },
+    { name: 'Standard', pct: 48, amount: '₹1,53,600', color: 'var(--accent)' },
+    { name: 'Premium', pct: 20, amount: '₹96,000', color: '#5e5ce6' },
+  ];
+  document.getElementById('tier-distribution').innerHTML = tiers.map(t => `
+    <div style="margin-bottom:16px">
+      <div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:8px">
+        <span style="font-weight:500;color:var(--text)">${t.name}</span>
+        <span style="color:${t.color};font-weight:600">${t.amount} (${t.pct}%)</span>
+      </div>
+      <div class="progress-bar">
+        <div class="progress-fill" style="width:${t.pct}%;background:${t.color}"></div>
+      </div>
+    </div>
+  `).join('');
+}
+
+// ============ INIT ============
+function init() {
+  initWeeklyChart();
+  initTriggers();
+  initTimeline();
+  initFrictionFactors();
+  initAllTriggers();
+  renderWorkerList();
+  initSensorSignals();
+  initPayoutFeed();
+  initPayoutPipeline();
+  initTierDistribution();
+
+  // Live event log
+  const logMsgs = [
+    'EVENTBRIDGE · AQI poll scheduled (60s)',
+    'LAMBDA · Parametric check — 847 active policies',
+    'SAGEMAKER · Isolation Forest inference complete',
+    'DYNAMODB · Policy state read: Zone 4 (284 riders)',
+    'API · CPCB feed fetched — AQI: 287',
+    'EVENTBRIDGE · Friction score computed: 62',
+    'LAMBDA · No threshold exceeded — standby',
+  ];
+  let li = 0;
+  appendEventLog(logMsgs[li++]);
+  setInterval(() => {
+    appendEventLog(logMsgs[li % logMsgs.length]);
+    li++;
+  }, 4000);
+
+  // Live stat bumps
+  setInterval(() => {
+    const el = document.querySelector('.stat-value.text');
+    if (el) el.textContent = (parseInt(el.textContent.replace(/,/g,'')) + Math.floor(Math.random()*3)).toLocaleString('en-IN');
+  }, 8000);
+}
+
+init();
+</script>
+</body>
+</html>
