@@ -9,13 +9,14 @@
 
 1. [The Problem](#the-problem)
 2. [Our Solution](#our-solution)
-3. [Who We're Protecting — Persona Scenarios](#who-were-protecting--persona-scenarios)
-4. [Weekly Premium Model & Parametric Triggers](#weekly-premium-model--parametric-triggers)
-5. [Adversarial Defense & Anti-Spoofing Strategy](#adversarial-defense--anti-spoofing-strategy)
-6. [System Architecture](#system-architecture)
-7. [AWS Tech Stack & AI/ML Integration](#aws-tech-stack--aiml-integration)
-8. [Development Roadmap](#development-roadmap)
-9. [Team & Acknowledgements](#team--acknowledgements)
+3. [The Innovation: Friction Score Engine](#the-innovation-friction-score-engine)
+4. [Who We're Protecting — Persona Scenarios](#who-were-protecting--persona-scenarios)
+5. [Weekly Premium Model & Parametric Triggers](#weekly-premium-model--parametric-triggers)
+6. [Adversarial Defense & Anti-Spoofing Strategy](#adversarial-defense--anti-spoofing-strategy)
+7. [System Architecture](#system-architecture)
+8. [AWS Tech Stack & AI/ML Integration](#aws-tech-stack--aiml-integration)
+9. [Development Roadmap](#development-roadmap)
+10. [Team & Acknowledgements](#team--acknowledgements)
 
 ---
 
@@ -49,11 +50,41 @@ Gig-Shield is a **mobile-first, serverless, event-driven parametric insurance pl
 1. **Enrol & Pay** — A delivery worker subscribes via the React Native app and pays a small weekly premium (₹20–₹80/week, calibrated by risk profile and city).
 2. **Monitor** — Our system continuously monitors real-time weather APIs, government AQI feeds, and civic alert APIs for trigger conditions.
 3. **Detect & Verify** — When a trigger threshold is crossed (e.g., Rainfall > 50mm, AQI > 400), the AI Defense Engine cross-validates it against sensor-fusion data from enrolled workers in that zone.
-4. **Payout** — Verified workers receive an instant UPI transfer — **within minutes, not weeks.**
+4. ---
+
+## The Innovation: Friction Score Engine
+
+At the heart of Gig-Shield is a novel concept:
+
+> **Friction Score = Real-time measure of income disruption**
+
+Instead of relying only on binary triggers (rain/no rain), we compute a continuous score:
+
+Friction Score =
+0.4 × Traffic Congestion +
+0.3 × Network Degradation +
+0.2 × Environmental Risk +
+0.1 × Zone Activity Drop
+
+### What This Enables:
+
+- Detects **hidden income loss**
+- Enables **smarter payouts**
+- Powers **dynamic weekly pricing**
+
+### Example:
+
+A worker may not qualify for payout due to rain,
+but:
+- Traffic congestion = 85%
+- Network quality = poor
+
+Friction Score exceeds threshold  
+Payout triggered
+
+This ensures fair coverage even without extreme events
 
 ---
-
-## Who We're Protecting — Persona Scenarios
 ### 🎯 Chosen Persona: Zepto Quick-Commerce Rider, Delhi (Priority)
 This is the core target profile for Phase 1 delivery and is the model used for tactical implementation, testing, and demo scenarios.
 
@@ -345,4 +376,5 @@ The architecture is a fully serverless, event-driven pipeline on AWS, designed t
 <p align="center">
   <strong>Gig-Shield — Because their income shouldn't depend on the weather forecast they never checked.</strong>
 </p>
+
 
