@@ -1,0 +1,11 @@
+rainfall,aqi,traffic_index,city,platform,income_loss_pct
+0.0,80,0.2,Hyderabad,Swiggy,5.1
+6.5,210,0.8,Mumbai,Zomato,72.4
+2.1,150,0.5,Delhi,Zepto,38.7
+0.5,95,0.3,Bangalore,Swiggy,10.2
+8.0,300,0.9,Chennai,Zomato,91.5
+1.0,120,0.4,Hyderabad,Zepto,22.3
+4.5,180,0.7,Mumbai,Swiggy,58.9
+0.0,60,0.1,Delhi,Zomato,3.4
+3.2,200,0.6,Bangalore,Zepto,47.6
+7.1,250,0.85,Chennai,Swiggy,83.2

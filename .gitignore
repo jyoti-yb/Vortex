@@ -1,0 +1,25 @@
+# Dependencies
+node_modules/
+__pycache__/
+*.pyc
+.pytest_cache/
+
+# Build output
+dist/
+build/
+
+# Env files — never commit secrets
+backend/.env
+frontend/.env
+
+# ML model cache
+/tmp/*.pkl
+*.pkl
+
+# Logs
+*.log
+npm-debug.log*
+
+# OS
+.DS_Store
+Thumbs.db

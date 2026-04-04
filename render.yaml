@@ -1,0 +1,39 @@
+services:
+  # ── ML Service ────────────────────────────────────────────
+  - type: web
+    name: gigshield-ml
+    runtime: docker
+    dockerfilePath: ./ml-service/Dockerfile
+    dockerContext: ./ml-service
+    plan: free
+    envVars:
+      - key: PORT
+        value: 8000
+    healthCheckPath: /health
+
+  # ── Backend API ───────────────────────────────────────────
+  - type: web
+    name: gigshield-backend
+    runtime: node
+    rootDir: backend
+    buildCommand: npm install
+    startCommand: node src/index.js
+    plan: free
+    envVars:
+      - key: PORT
+        value: 5000
+      - key: MONGO_URI
+        sync: false          # set manually in Render dashboard
+      - key: JWT_SECRET
+        generateValue: true
+      - key: OPENWEATHER_API_KEY
+        sync: false
+      - key: OPENAQ_API_KEY
+        sync: false
+      - key: ML_SERVICE_URL
+        fromService:
+          name: gigshield-ml
+          type: web
+          property: host
+          envVarPrefix: https://
+    healthCheckPath: /health
